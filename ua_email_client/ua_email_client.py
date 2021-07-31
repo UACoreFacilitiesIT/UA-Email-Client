@@ -17,13 +17,15 @@ class EmailClient():
         self.sender = sender
         self.client =  boto3.client('ses',region_name=region_name)
         self.templates = dict()
+        self.subjects = dict()
 
     def add_template(self, template):
         template_name = template.split(".")
         if len(template_name) != 2:
             raise ImproperTemplateNameException("That template has an invalid name!")
-        elif template_name[1] != "html":
-            raise ImproperTemplateNameException("That template is not html!")
+        elif template_name[1] != "html" and template_name[1] != "xml":
+            raise ImproperTemplateNameException(
+                "That template is not the correct file type!")
         else:
             template_name = template_name[0]
 
@@ -70,4 +72,4 @@ class EmailClient():
             print(f"Failed to send email to {receiver} at {datetime.now()}.")
             raise EmailFailedToSendException()
         else:
-            print(f"Sent email to {receiver} at{datetime.now()}.")
+            print(f"Sent email to {receiver} about {data} at{datetime.now()}.")
