@@ -50,6 +50,9 @@ class EmailClient():
         if type(receiver) == str:
             receiver = [receiver]
 
+        if self.subjects.get(subject):
+            subject = self.subjects[subject]
+
         try:
             self.client.send_email(
                     Destination={'ToAddresses': receiver},

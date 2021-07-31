@@ -10,7 +10,7 @@ def readme(filename):
 
 setup(
     name="ua_email_client",
-    version="0.1.3",
+    version="0.1.4",
     packages=find_packages(),
     author="Ryan Johannes-Bland",
     author_email="rjjohannesbland@email.arizona.edu",
