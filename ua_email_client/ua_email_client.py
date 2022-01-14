@@ -34,7 +34,8 @@ class EmailClient():
         Arguments:
             template (string): The name of the template to use.
         """
-        template_name = template.split(".")
+        template_file = template.split("/")[-1]
+        template_name = template_file.split(".")
         if len(template_name) != 2:
             raise ImproperTemplateNameException(
                 "That template has an invalid name!")

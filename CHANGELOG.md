@@ -3,6 +3,10 @@
 All notable changes to this project can be found here.
 The format of this changelog is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+#### 2022/01/14[0.1.6](https://github.com/UACoreFacilitiesIT/UA-Email-Client)
+
+When storing a template, remove the path components so that the template to use when sending an email doesn't also need to include the path components.
+
 #### 2021/10/13[0.1.5](https://github.com/UACoreFacilitiesIT/UA-Email-Client)
 
 Defined errors and added documentation.
