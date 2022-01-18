@@ -1,0 +1,7 @@
+dist/*
+build/*
+*.egg-info/*
+*__pycache__*
+*creds*
+*.ipynb
+tests/email_creds.json

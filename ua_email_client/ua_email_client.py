@@ -66,7 +66,7 @@ class EmailClient():
         Raises:
             EmailFailedToSendException: The email couldn't be sent.
         """
-        if type(data) is not dict and type(data) is not None:
+        if type(data) is not dict and data is not None:
             raise TypeError("Data must be a dictionary or None!")
         if type(receiver) is not list and type(receiver) is not str:
             raise TypeError("Receiver must be a list or string!")

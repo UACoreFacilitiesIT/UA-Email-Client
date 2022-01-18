@@ -3,6 +3,12 @@
 All notable changes to this project can be found here.
 The format of this changelog is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+#### 2022/01/18[0.1.7](https://github.com/UACoreFacilitiesIT/UA-Email-Client)
+
+Update the data type check for the data attribute of the send_email function to actually check if the value is None.
+
+Write a test suite for the client.
+
 #### 2022/01/14[0.1.6](https://github.com/UACoreFacilitiesIT/UA-Email-Client)
 
 When storing a template, remove the path components so that the template to use when sending an email doesn't also need to include the path components.
