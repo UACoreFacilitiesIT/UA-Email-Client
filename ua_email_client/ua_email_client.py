@@ -21,11 +21,20 @@ class ImproperTemplateNameException(Exception):
 class EmailClient():
     """ A simple email client for AWS SES system."""
 
-    def __init__(self, sender, region_name="us-west-2"):
+    def __init__(self, sender, region_name="us-west-2", aws_access_key=None, aws_secret_key=None):
         self.sender = sender
-        self.client = boto3.client('ses', region_name=region_name)
         self.templates = dict()
         self.subjects = dict()
+
+        if (aws_access_key and aws_secret_key): # AWS credentials provided
+            self.client = boto3.client(
+                "ses",
+                aws_access_key_id=aws_access_key,
+                aws_secret_access_key=aws_secret_key,
+                region_name=region_name
+            )
+        else: # Already inside AWS, no credentials needed
+            self.client = boto3.client('ses', region_name=region_name)
 
     def add_template(self, template):
         """
@@ -53,7 +62,7 @@ class EmailClient():
             template = Template(file.read())
         self.templates[template_name] = template
 
-    def send_email(self, receiver, template, subject, data):
+    def send_email(self, receiver, template, subject, data, use_template=True):
         """
         Sends an email using AWS.
 
@@ -61,19 +70,16 @@ class EmailClient():
             receiver (string or list): The emails to send this email to.
             template (string): The template to use for this email.
             subject (string): The subject of the email.
-            data (dict): The information to be populated in the template.
+            data (dict or string):
+                The information to be populated in the template (use_template=True)
+                OR The message to be emailed directly (use_template = False)
+            use_template (bool): Whether or not to use a template
 
         Raises:
             EmailFailedToSendException: The email couldn't be sent.
         """
-        if type(data) is not dict and data is not None:
-            raise TypeError("Data must be a dictionary or None!")
         if type(receiver) is not list and type(receiver) is not str:
             raise TypeError("Receiver must be a list or string!")
-
-        if not data:
-            data = dict()
-        filled_template = self.templates[template].render(**data)
 
         if type(receiver) == str:
             receiver = [receiver]
@@ -81,14 +87,29 @@ class EmailClient():
         if self.subjects.get(subject):
             subject = self.subjects[subject]
 
+        if not data:
+            data = dict()
+
+        if use_template:
+            body = self.templates[template].render(**data)
+            message_type = "Html"
+        else:
+            body = data
+            message_type = "Text"
+            # Check for passed in Html string
+            if body:
+                if len(body) > 5:
+                    if (body[0:6].lower() == "<html>"):
+                        message_type = "Html"
+
         try:
             self.client.send_email(
                 Destination={'ToAddresses': receiver},
                 Message={
                     'Body': {
-                        'Html': {
+                        message_type: {
                             'Charset': "UTF-8",
-                            'Data': filled_template
+                            'Data': body
                         },
                     },
                     'Subject': {
@@ -104,3 +125,4 @@ class EmailClient():
             raise EmailFailedToSendException() from None
         else:
             print(f"Sent email to {receiver} about {data} at{datetime.now()}.")
+

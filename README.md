@@ -15,8 +15,10 @@ client = ua_email_client.EmailClient(email)
 # The template name given should be relative name to a file.
 client.add_template("success.html")
 
-# Destinations 
+# Destinations
 client.send_email(destinations, "success.html", subject, body)
+# No Template
+client.send_email(destinations, None, subject, body, use_template=False)
 ```
 
 ## Installation
